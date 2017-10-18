@@ -19,8 +19,8 @@ import (
 	"kubevirt.io/kubevirt/pkg/virt-apiserver/apiserver"
 )
 
-//FIXME: is this defined already somewhere else?
-const defaultEtcdPathPrefix = "/registry/kubevirt.io"
+const defaultEtcdUrl = "http://127.0.0.1:2379"
+const defaultEtcdPathPrefix = "/registry"
 const etcdRetryLimit = 600
 const etcdRetryInterval = 1 * time.Second
 const connectionTimeout = 1 * time.Second
@@ -154,9 +154,7 @@ func main() {
 	cmd := NewVirtApiServerCommand(wait.NeverStop)
 	cmd.Flags().AddGoFlagSet(flag.CommandLine)
 
-	// FIXME: this is hardcoded from the KubeVirt default manifest.
-	// get rid of this.
-	etcdServers := []string{"http://127.0.0.1:2379"}
+	etcdServers := []string{defaultEtcdUrl}
 	//etcdServers := strings.Split(etcdServerFlag.Value.String(), ",")
 	if err := wait.PollImmediate(etcdRetryInterval, etcdRetryLimit*etcdRetryInterval,
 		etcdConnection{ServerList: etcdServers}.checkEtcdServers); err != nil {
