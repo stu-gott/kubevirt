@@ -11,7 +11,7 @@ metadata:
   name: "kubevirt.io:virt-apiserver"
 rules:
 - apiGroups: ["kubevirt.io"] # "" indicates the core API group
-  resources: ["virtualmachines", "manifests"]
+  resources: ["virtualmachines", "manifests", "virtualmachinereplicasets"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 # Bind admin role to apiserver service account and admin user
@@ -24,6 +24,8 @@ subjects:
   name: virt-apiserver
 - kind: User
   name: kubernetes-admin
+- kind: ServiceAccount
+  name: kubevirt-infra
 roleRef:
   kind: ClusterRole
   name: "kubevirt.io:virt-apiserver"
@@ -123,8 +125,6 @@ spec:
             - "--requestheader-client-ca-file=/var/run/virt-apiserver-cert/requestheader-ca.crt"
             - "--etcd-servers=http://127.0.0.1:2379"
             - "--authentication-skip-lookup"
-            - "-v"
-            - "9"
         ports:
           - containerPort: 8183
             name: "virt-apiserver"
