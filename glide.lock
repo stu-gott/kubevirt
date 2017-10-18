@@ -1,5 +1,5 @@
 hash: e9b91839ade6288eac545b94577538aaf75f1e5647c657ed3561c7cc359d8139
-updated: 2017-10-09T15:01:30.170778208-04:00
+updated: 2017-10-10T08:05:19.564729304-04:00
 imports:
 - name: bitbucket.org/ww/goautoneg
   version: 75cd24fc2f2c2a2088577d12123ddee5f54e0675
@@ -151,7 +151,7 @@ imports:
   - compiler
   - extensions
 - name: github.com/gorilla/websocket
-  version: 4201258b820c74ac8e6922fc9e6b52f71fe46f8d
+  version: c908dc801cef474e686e478694c8f9f32e233901
 - name: github.com/gregjones/httpcache
   version: 787624de3eb7bd915c329cba748687a3b22666a6
   subpackages:
@@ -269,7 +269,7 @@ imports:
 - name: github.com/spf13/cobra
   version: f62e98d28ab7ad31d707ba837a966378465c7b57
 - name: github.com/spf13/pflag
-  version: be7121dd7a937a85e1e4b1ddda6a3edce3466110
+  version: a9789e855c7696159b7db0db7f440b449edf2b31
 - name: github.com/ugorji/go
   version: ded73eae5db7e7a0ef6f55aace87a2873c5d2b74
   subpackages:
@@ -277,6 +277,11 @@ imports:
 - name: golang.org/x/crypto
   version: 81e90905daefcd6fd217b62423c0908922eadb30
   subpackages:
+  - bcrypt
+  - blowfish
+  - nacl/secretbox
+  - poly1305
+  - salsa20/salsa
   - ssh/terminal
 - name: golang.org/x/net
   version: 1c05540f6879653db88113bc4a2b70aec4bd491f
