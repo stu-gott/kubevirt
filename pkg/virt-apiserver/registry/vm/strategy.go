@@ -13,6 +13,7 @@ import (
 	"k8s.io/apiserver/pkg/storage/names"
 
 	"kubevirt.io/kubevirt/pkg/api/v1"
+	"kubevirt.io/kubevirt/pkg/logging"
 )
 
 func NewStrategy(typer runtime.ObjectTyper) kubevirtStrategy {
@@ -55,6 +56,12 @@ func (kubevirtStrategy) PrepareForCreate(ctx genericapirequest.Context, obj runt
 }
 
 func (kubevirtStrategy) PrepareForUpdate(ctx genericapirequest.Context, obj, old runtime.Object) {
+	log := logging.DefaultLogger()
+	log.Info().Msgf("In PrepareForUpdate handler")
+	newVm := obj.(*v1.VirtualMachine)
+	log.Info().Msgf("New VM: %v", newVm)
+	oldVm := old.(*v1.VirtualMachine)
+	log.Info().Msgf("Old VM: %v", oldVm)
 }
 
 func (kubevirtStrategy) Validate(ctx genericapirequest.Context, obj runtime.Object) field.ErrorList {

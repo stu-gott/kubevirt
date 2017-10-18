@@ -63,6 +63,17 @@ type vmService struct {
 }
 
 func (v *vmService) StartVMPod(vm *corev1.VirtualMachine) error {
+	log := logging.DefaultLogger()
+	if vm.GetObjectMeta().GetName() == "" {
+		log.Error().Msgf("VM name is empty.")
+	}
+	if vm.GetObjectMeta().GetNamespace() == "" {
+		log.Error().Msgf("VM namespace is empty.")
+	}
+	if string(vm.GetObjectMeta().GetUID()) == "" {
+		log.Error().Msgf("VM UID is empty.")
+	}
+
 	precond.MustNotBeNil(vm)
 	precond.MustNotBeEmpty(vm.GetObjectMeta().GetName())
 	precond.MustNotBeEmpty(vm.GetObjectMeta().GetNamespace())

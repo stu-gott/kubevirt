@@ -89,6 +89,14 @@ func (c *VMController) Execute() bool {
 	if quit {
 		return false
 	}
+
+	logging.DefaultLogger().Info().Msgf("key from queue (string): %v", key.(string))
+
+	if key == "" {
+		logging.DefaultLogger().Error().Msgf("Empty key retrieved from queue.")
+		//return true
+	}
+
 	defer c.queue.Done(key)
 	if err := c.execute(key.(string)); err != nil {
 		logging.DefaultLogger().Info().Reason(err).Msgf("reenqueuing VM %v", key)
@@ -101,6 +109,8 @@ func (c *VMController) Execute() bool {
 }
 
 func (c *VMController) execute(key string) error {
+
+	logging.DefaultLogger().Info().Msgf("VM key: %s", key)
 
 	// Fetch the latest Vm state from cache
 	obj, exists, err := c.store.GetByKey(key)
@@ -120,6 +130,7 @@ func (c *VMController) execute(key string) error {
 	} else {
 		vm = obj.(*kubev1.VirtualMachine)
 	}
+
 	logger := logging.DefaultLogger().Object(vm)
 
 	if !exists {
@@ -178,6 +189,9 @@ func (c *VMController) execute(key string) error {
 
 			}
 		}
+
+		logger.Info().Msgf("original VM object: %v", vm)
+		logger.Info().Msgf("Copied VM object: %v", vmCopy)
 
 		// Create a Pod which will be the VM destination
 		if err := c.vmService.StartVMPod(&vmCopy); err != nil {
@@ -261,8 +275,12 @@ func verifyReadiness(pod *k8sv1.Pod) bool {
 
 func vmLabelHandler(vmQueue workqueue.RateLimitingInterface) func(obj interface{}) {
 	return func(obj interface{}) {
+		log := logging.DefaultLogger()
+		log.Info().Msgf("Inside VM label handler")
 		phase := obj.(*k8sv1.Pod).Status.Phase
+		log.Info().Msgf("Phase: %v", phase)
 		namespace := obj.(*k8sv1.Pod).ObjectMeta.Namespace
+		log.Info().Msgf("Namespace: %v", namespace)
 		appLabel, hasAppLabel := obj.(*k8sv1.Pod).ObjectMeta.Labels[kubev1.AppLabel]
 		domainLabel, hasDomainLabel := obj.(*k8sv1.Pod).ObjectMeta.Labels[kubev1.DomainLabel]
 		_, hasMigrationLabel := obj.(*k8sv1.Pod).ObjectMeta.Labels[kubev1.MigrationLabel]
@@ -280,6 +298,7 @@ func vmLabelHandler(vmQueue workqueue.RateLimitingInterface) func(obj interface{
 			// ensure we're looking just for virt-launcher pods
 			return
 		}
+		log.Info().Msgf("Enqueuing '%s'", namespace+"/"+domainLabel)
 		vmQueue.Add(namespace + "/" + domainLabel)
 	}
 }
