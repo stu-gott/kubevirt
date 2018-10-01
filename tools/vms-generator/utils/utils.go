@@ -84,7 +84,7 @@ const (
 
 const windowsFirmware = "5d307ca9-b3ef-428c-8861-06e72d69f223"
 
-const apiVersion = "kubevirt.io/v1alpha2"
+const apiVersion = "kubevirt.io/v1alpha3"
 
 var DockerPrefix = "registry:5000/kubevirt"
 var DockerTag = "devel"
