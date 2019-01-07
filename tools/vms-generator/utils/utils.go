@@ -124,7 +124,7 @@ func addContainerDisk(spec *v1.VirtualMachineInstanceSpec, image string, bus str
 	spec.Domain.Devices = v1.Devices{
 		Disks: []v1.Disk{
 			{
-				Name: "registrydisk",
+				Name: "containerdisk",
 				DiskDevice: v1.DiskDevice{
 					Disk: &v1.DiskTarget{
 						Bus: bus,
@@ -135,7 +135,7 @@ func addContainerDisk(spec *v1.VirtualMachineInstanceSpec, image string, bus str
 	}
 	spec.Volumes = []v1.Volume{
 		{
-			Name: "registrydisk",
+			Name: "containerdisk",
 			VolumeSource: v1.VolumeSource{
 				ContainerDisk: &v1.ContainerDiskSource{
 					Image: image,
